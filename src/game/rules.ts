@@ -428,3 +428,15 @@ export function rollPowerUpDrop(roll: number = Math.random()): PowerUpType | nul
   return null;
 }
 
+export const DEFAULT_PLAYER_NAME = 'Astronaut';
+
+/**
+ * Resolves the player's astronaut nickname, falling back to "Astronaut" when empty or whitespace.
+ */
+export function resolvePlayerName(rawName: string | null | undefined): string {
+  if (!rawName) return DEFAULT_PLAYER_NAME;
+  const trimmed = rawName.trim().slice(0, 16);
+  return trimmed.length > 0 ? trimmed : DEFAULT_PLAYER_NAME;
+}
+
+

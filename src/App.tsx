@@ -5,7 +5,14 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { VoidSurvivorEngine } from './game/engine.ts';
-import { INITIAL_PLAYER_STATS, PlayerStats, generateUpgradeOptions, UpgradeOption } from './game/rules.ts';
+import {
+  INITIAL_PLAYER_STATS,
+  PlayerStats,
+  generateUpgradeOptions,
+  UpgradeOption,
+  resolvePlayerName,
+} from './game/rules.ts';
+import { getLastPlayerName, setLastPlayerName, saveHighScore } from './game/storage.ts';
 import { audioSystem } from './game/audio.ts';
 import { TitleScreen } from './components/TitleScreen.tsx';
 import { HUD } from './components/HUD.tsx';
@@ -24,6 +31,18 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState>('title');
   const [isMuted, setIsMuted] = useState<boolean>(audioSystem.getMuted());
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
+
+  // Player Nickname state (persisted in localStorage)
+  const [playerNameInput, setPlayerNameInput] = useState<string>(() => getLastPlayerName());
+  const playerNameRef = useRef<string>(resolvePlayerName(getLastPlayerName()));
+  const [rankResult, setRankResult] = useState<{ rank: number; isTop5: boolean } | null>(null);
+
+  // Update localStorage whenever player types their nickname in TitleScreen
+  const handlePlayerNameChange = useCallback((newName: string) => {
+    setPlayerNameInput(newName);
+    setLastPlayerName(newName);
+    playerNameRef.current = resolvePlayerName(newName);
+  }, []);
 
   // Level Up options state
   const [levelUpOptions, setLevelUpOptions] = useState<UpgradeOption[]>([]);
@@ -71,11 +90,13 @@ export default function App() {
   // Start game handler
   const handleStartGame = useCallback(() => {
     if (!engineRef.current) return;
+    playerNameRef.current = resolvePlayerName(playerNameInput);
+    setLastPlayerName(playerNameInput);
     engineRef.current.reset();
     engineRef.current.start();
     setGameState('playing');
     setPlayerStats({ ...INITIAL_PLAYER_STATS });
-  }, []);
+  }, [playerNameInput]);
 
   // Pause game handler
   const handlePause = useCallback(() => {
@@ -151,6 +172,15 @@ export default function App() {
         setGameState('paused'); // pauses simulation
       },
       onGameOver: (summary) => {
+        const finalName = resolvePlayerName(playerNameRef.current);
+        const saved = saveHighScore({
+          name: finalName,
+          score: summary.score,
+          survivalSeconds: summary.survivalSeconds,
+          kills: summary.kills,
+          levelReached: summary.level,
+        });
+        setRankResult({ rank: saved.rank, isTop5: saved.isTop5 });
         setRunSummary(summary);
         setGameState('gameover');
       },
@@ -192,6 +222,8 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleGlobalKey);
   }, [gameState, levelUpOptions.length, handlePause, handleResume]);
 
+  const activeAstronautName = resolvePlayerName(playerNameInput);
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#05060b] select-none">
       {/* 1. Isolated Canvas mount */}
@@ -204,6 +236,8 @@ export default function App() {
       {/* 2. Title Screen */}
       {gameState === 'title' && (
         <TitleScreen
+          playerName={playerNameInput}
+          onPlayerNameChange={handlePlayerNameChange}
           onStart={handleStartGame}
           onOpenLeaderboard={() => setShowLeaderboard(true)}
           isMuted={isMuted}
@@ -257,9 +291,12 @@ export default function App() {
       {/* 6. Game Over Modal */}
       {gameState === 'gameover' && (
         <GameOverModal
+          playerName={activeAstronautName}
+          rankResult={rankResult}
           summary={runSummary}
           onPlayAgain={handleStartGame}
           onOpenLeaderboard={() => setShowLeaderboard(true)}
+          onBackToTitle={handleBackToTitle}
         />
       )}
 

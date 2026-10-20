@@ -16,6 +16,8 @@ import {
   generateUpgradeOptions,
   rollPowerUpDrop,
   POWER_UP_CONFIGS,
+  resolvePlayerName,
+  DEFAULT_PLAYER_NAME,
 } from './rules.ts';
 
 test('calculateXpNeeded scales progressively with level', () => {
@@ -107,4 +109,15 @@ test('rollPowerUpDrop maps probability ranges to the 4 power-up types', () => {
   assert.equal(POWER_UP_CONFIGS.weapon_overdrive.floatingText, 'FRENZY!');
   assert.equal(POWER_UP_CONFIGS.gravity_vacuum.floatingText, 'VACUUM!');
 });
+
+test('resolvePlayerName trims input and falls back to Astronaut when empty', () => {
+  assert.equal(DEFAULT_PLAYER_NAME, 'Astronaut');
+  assert.equal(resolvePlayerName(''), 'Astronaut');
+  assert.equal(resolvePlayerName('   '), 'Astronaut');
+  assert.equal(resolvePlayerName(null), 'Astronaut');
+  assert.equal(resolvePlayerName(undefined), 'Astronaut');
+  assert.equal(resolvePlayerName('  KAPT-NEO  '), 'KAPT-NEO');
+  assert.equal(resolvePlayerName('12345678901234567890'), '1234567890123456');
+});
+
 

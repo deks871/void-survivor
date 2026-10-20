@@ -72,7 +72,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) =
                 Belum ada riwayat permainan. Mainkan sekarang!
               </p>
               <p className="text-[11px] font-mono text-slate-500 max-w-xs mx-auto">
-                Selesaikan satu ronde permainan dan simpan nama Anda saat Game Over.
+                Isi Nickname Astronaut di menu utama dan mulai misi untuk mencetak Top 5 Skor.
               </p>
             </div>
           ) : (
