@@ -1,0 +1,6 @@
+{
+  "name": "Void Survivor",
+  "description": "Retro 2D Sci-Fi Roguelite Survivor game with auto-attacking weapons, alien swarms, procedural audio, and offline progression.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
