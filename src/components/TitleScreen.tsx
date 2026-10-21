@@ -76,8 +76,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <OfflineIndicator />
         </div>
         <div className="flex items-center gap-2 ml-auto">
-          <PWAInstallButton />
-
           <button
             type="button"
             onClick={() => {
@@ -226,6 +224,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             <Play className="w-5 h-5 fill-current text-slate-950 transition-transform group-hover:translate-x-0.5" />
             <span>MULAI GAME</span>
           </button>
+
+          <PWAInstallButton variant="menu" />
         </form>
 
         {/* Feature badges */}

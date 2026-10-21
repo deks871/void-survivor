@@ -4,17 +4,26 @@
  */
 
 import React, { useState } from 'react';
-import { Download, Share, X, WifiOff } from 'lucide-react';
+import { Share, X, WifiOff } from 'lucide-react';
 import { usePWAInstall, useOnlineStatus } from '../game/usePWAInstall.ts';
 import { audioSystem } from '../game/audio.ts';
 
-export const PWAInstallButton: React.FC = () => {
+interface PWAInstallButtonProps {
+  variant?: 'header' | 'menu';
+}
+
+export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({ variant = 'header' }) => {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
 
   if (isInstalled) {
     return null;
   }
+
+  const buttonClasses =
+    variant === 'menu'
+      ? 'w-full mt-2.5 py-2.5 px-4 flex items-center justify-center gap-2 text-xs font-pixel tracking-wider text-cyan-200 bg-cyan-950/60 border border-cyan-400/60 hover:bg-cyan-900/70 hover:border-cyan-300 active:scale-[0.99] transition-all rounded-lg shadow-[0_0_16px_rgba(6,182,212,0.28)] cursor-pointer'
+      : 'flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono font-bold text-cyan-200 bg-cyan-950/50 border border-cyan-400/50 hover:bg-cyan-900/60 hover:border-cyan-300 transition-all rounded shadow-[0_0_12px_rgba(6,182,212,0.25)] whitespace-nowrap cursor-pointer';
 
   if (isInstallable) {
     return (
@@ -24,11 +33,10 @@ export const PWAInstallButton: React.FC = () => {
           audioSystem.playClick();
           void install();
         }}
-        className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono font-bold text-cyan-200 bg-cyan-950/50 border border-cyan-400/50 hover:bg-cyan-900/60 hover:border-cyan-300 transition-all rounded shadow-[0_0_12px_rgba(6,182,212,0.25)] whitespace-nowrap cursor-pointer"
-        aria-label="Install Aplikasi Void Survivor"
+        className={buttonClasses}
+        aria-label="Instal Game Void Survivor"
       >
-        <Download className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-        <span>INSTALL APP</span>
+        <span>📲 INSTAL GAME</span>
       </button>
     );
   }
@@ -42,11 +50,10 @@ export const PWAInstallButton: React.FC = () => {
             audioSystem.playClick();
             setShowIOSGuide(true);
           }}
-          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono font-bold text-cyan-200 bg-cyan-950/50 border border-cyan-400/50 hover:bg-cyan-900/60 hover:border-cyan-300 transition-all rounded shadow-[0_0_12px_rgba(6,182,212,0.25)] whitespace-nowrap cursor-pointer"
-          aria-label="Panduan Install iOS"
+          className={buttonClasses}
+          aria-label="Panduan Instal Game di iOS"
         >
-          <Download className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-          <span>INSTALL iOS</span>
+          <span>📲 INSTAL GAME</span>
         </button>
 
         {showIOSGuide && (
@@ -59,7 +66,7 @@ export const PWAInstallButton: React.FC = () => {
             <div className="w-full max-w-sm rounded-xl bg-[#070a18] border border-cyan-500/50 p-5 shadow-[0_0_30px_rgba(6,182,212,0.3)] text-left font-mono">
               <div className="flex items-center justify-between mb-3">
                 <h3 id="ios-install-title" className="text-xs font-pixel text-cyan-300 tracking-wider">
-                  INSTALL VOID SURVIVOR
+                  📲 INSTAL GAME
                 </h3>
                 <button
                   type="button"
@@ -116,4 +123,3 @@ export const OfflineIndicator: React.FC = () => {
     </div>
   );
 };
-

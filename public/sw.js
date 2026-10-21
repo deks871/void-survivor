@@ -1,11 +1,11 @@
 /**
  * Void Survivor — Service Worker (sw.js)
- * Caches core app shell, JS/CSS bundles, Google Fonts, icons, and audio assets
- * for 100% offline playability and Chrome PWA installability.
+ * Implements install, activate, and cache-first fetch strategy for static assets
+ * so the game works 100% offline and meets Google Chrome Android PWA criteria.
  */
 
-const CACHE_NAME = 'void-survivor-cache-v1';
-const FONT_CACHE_NAME = 'void-survivor-fonts-v1';
+const CACHE_NAME = 'void-survivor-cache-v2';
+const FONT_CACHE_NAME = 'void-survivor-fonts-v2';
 
 const PRECACHE_ASSETS = [
   '/',
@@ -46,7 +46,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Warm cache with resources loaded during the initial page boot before SW took control
+// Warm cache with resources loaded during initial page boot
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'CACHE_LOADED_RESOURCES' && Array.isArray(event.data.urls)) {
     const urls = event.data.urls;
@@ -95,7 +95,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 1. Google Fonts (stylesheets & font binaries): Cache-First with network fallback
+  // 1. Google Fonts (stylesheets & font files): Cache-First
   if (
     url.hostname === 'fonts.googleapis.com' ||
     url.hostname === 'fonts.gstatic.com'
@@ -120,7 +120,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. HTML Navigation requests: Network-First falling back to cached app shell
+  // 2. HTML Navigation requests: Cache-First fallback when offline
   if (request.mode === 'navigate') {
     event.respondWith(
       (async () => {
@@ -148,31 +148,32 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. Same-origin static assets (JS, TS/Vite modules, CSS, images, fonts, audio, manifest):
-  // Stale-While-Revalidate so offline reload serves cached bundles immediately.
+  // 3. Static Assets (JS, CSS, images, icons, audio, manifest): Cache-First strategy
   if (url.origin === self.location.origin) {
     event.respondWith(
       caches.open(CACHE_NAME).then(async (cache) => {
         const cachedResponse = await cache.match(request);
-        const networkFetch = fetch(request)
-          .then((response) => {
-            if (response && response.status === 200) {
-              cache.put(request, response.clone());
-            }
-            return response;
-          })
-          .catch(() => null);
-
         if (cachedResponse) {
+          // Update cache in background while returning cached asset immediately
+          fetch(request)
+            .then((networkResponse) => {
+              if (networkResponse && networkResponse.status === 200) {
+                cache.put(request, networkResponse.clone());
+              }
+            })
+            .catch(() => {});
           return cachedResponse;
         }
 
-        const networkResponse = await networkFetch;
-        if (networkResponse) {
+        try {
+          const networkResponse = await fetch(request);
+          if (networkResponse && networkResponse.status === 200) {
+            cache.put(request, networkResponse.clone());
+          }
           return networkResponse;
+        } catch {
+          return new Response('', { status: 408, statusText: 'Offline' });
         }
-
-        return new Response('', { status: 408, statusText: 'Offline' });
       })
     );
   }
