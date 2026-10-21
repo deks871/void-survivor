@@ -120,4 +120,31 @@ test('resolvePlayerName trims input and falls back to Astronaut when empty', () 
   assert.equal(resolvePlayerName('12345678901234567890'), '1234567890123456');
 });
 
+test('PWA manifest.json and sw.js meet all Chrome installability criteria', async () => {
+  const fs = await import('node:fs');
+  const manifestRaw = fs.readFileSync('public/manifest.json', 'utf8');
+  const manifest = JSON.parse(manifestRaw);
+
+  assert.equal(manifest.name, 'Void Survivor');
+  assert.equal(manifest.short_name, 'VoidSurvivor');
+  assert.ok(manifest.short_name.length <= 12);
+  assert.equal(manifest.start_url, '/');
+  assert.equal(manifest.display, 'standalone');
+  assert.equal(manifest.orientation, 'portrait');
+  assert.equal(manifest.background_color, '#05060b');
+  assert.equal(manifest.theme_color, '#05060b');
+
+  assert.ok(Array.isArray(manifest.icons));
+  const has192 = manifest.icons.some((i: { sizes: string }) => i.sizes.includes('192x192'));
+  const has512 = manifest.icons.some((i: { sizes: string }) => i.sizes.includes('512x512'));
+  assert.equal(has192, true);
+  assert.equal(has512, true);
+
+  assert.equal(fs.existsSync('public/sw.js'), true);
+  assert.equal(fs.existsSync('public/pwa-192x192.png'), true);
+  assert.equal(fs.existsSync('public/pwa-512x512.png'), true);
+  assert.equal(fs.existsSync('public/apple-touch-icon.png'), true);
+});
+
+
 

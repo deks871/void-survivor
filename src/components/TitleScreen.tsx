@@ -6,6 +6,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Play, Trophy, Volume2, VolumeX, Shield, Zap, Sparkles, User } from 'lucide-react';
 import { audioSystem } from '../game/audio.ts';
+import { PWAInstallButton, OfflineIndicator } from './PWAInstallButton.tsx';
 
 interface TitleScreenProps {
   playerName: string;
@@ -70,18 +71,23 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   return (
     <div className="absolute inset-0 z-30 flex flex-col justify-between items-center px-4 py-3 sm:p-6 bg-gradient-to-b from-[#05060f]/90 via-[#090b1c]/85 to-[#04050a]/95 pointer-events-auto overflow-y-auto">
       {/* Top utility row */}
-      <div className="w-full max-w-4xl flex justify-end items-center pt-1 sm:pt-2 shrink-0">
-        <div className="flex items-center gap-2">
+      <div className="w-full max-w-4xl flex justify-between items-center pt-1 sm:pt-2 shrink-0 gap-2">
+        <div className="flex items-center">
+          <OfflineIndicator />
+        </div>
+        <div className="flex items-center gap-2 ml-auto">
+          <PWAInstallButton />
+
           <button
             type="button"
             onClick={() => {
               audioSystem.playClick();
               onOpenLeaderboard();
             }}
-            className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-bold text-amber-300 bg-amber-950/40 border border-amber-500/40 hover:bg-amber-900/50 hover:border-amber-400 transition-all rounded shadow-[0_0_12px_rgba(245,158,11,0.2)] cursor-pointer"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono font-bold text-amber-300 bg-amber-950/40 border border-amber-500/40 hover:bg-amber-900/50 hover:border-amber-400 transition-all rounded shadow-[0_0_12px_rgba(245,158,11,0.2)] whitespace-nowrap cursor-pointer"
             aria-label="Buka Leaderboard Lokal"
           >
-            <Trophy className="w-4 h-4 text-amber-400" />
+            <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
             <span>TOP 5 SKOR</span>
           </button>
 

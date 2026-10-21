@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="55%" stop-color="#090b1c" />
+      <stop offset="100%" stop-color="#05060b" />
+    </radialGradient>
+    <linearGradient id="cyanNeon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9" />
+      <stop offset="50%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+    <linearGradient id="magentaNeon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f472b6" />
+      <stop offset="50%" stop-color="#ec4899" />
+      <stop offset="100%" stop-color="#9333ea" />
+    </linearGradient>
+    <linearGradient id="visorGrad" x1="0%" y1="0%" x2="100%" y2="85%">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="45%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="url(#bgGrad)" />
+
+  <!-- Outer Cyber Frame Ring -->
+  <rect x="24" y="24" width="464" height="464" rx="80" fill="none" stroke="url(#cyanNeon)" stroke-width="5" stroke-opacity="0.45" />
+
+  <!-- Cosmic Stars -->
+  <circle cx="96" cy="108" r="3" fill="#67e8f9" opacity="0.8" />
+  <circle cx="418" cy="96" r="4" fill="#f472b6" opacity="0.85" />
+  <circle cx="84" cy="380" r="3.5" fill="#a855f7" opacity="0.7" />
+  <circle cx="430" cy="392" r="3" fill="#22d3ee" opacity="0.8" />
+  <circle cx="132" cy="68" r="2" fill="#f8fafc" opacity="0.6" />
+  <circle cx="380" cy="436" r="2.5" fill="#f8fafc" opacity="0.6" />
+
+  <!-- Orbiting Energy Ring -->
+  <ellipse cx="256" cy="270" rx="185" ry="62" fill="none" stroke="url(#magentaNeon)" stroke-width="6" stroke-dasharray="18 10" transform="rotate(-18 256 270)" opacity="0.85" />
+
+  <!-- Jetpack & Cyber Wings -->
+  <path d="M 118 250 L 66 208 L 96 312 L 138 308 Z" fill="#0f172a" stroke="#06b6d4" stroke-width="6" stroke-linejoin="round" />
+  <path d="M 394 250 L 446 208 L 416 312 L 374 308 Z" fill="#0f172a" stroke="#06b6d4" stroke-width="6" stroke-linejoin="round" />
+
+  <!-- Astronaut Shoulders / Torso Armor -->
+  <path d="M 126 390 C 126 322 178 296 256 296 C 334 296 386 322 386 390 L 366 426 L 146 426 Z" fill="#1e293b" stroke="url(#cyanNeon)" stroke-width="8" stroke-linejoin="round" />
+
+  <!-- Chest Reactor Core -->
+  <polygon points="256,330 286,360 256,392 226,360" fill="url(#cyanNeon)" stroke="#e0f2fe" stroke-width="4" filter="url(#glow)" />
+
+  <!-- Helmet Antennae / Ears -->
+  <rect x="114" y="182" width="26" height="64" rx="10" fill="#0f172a" stroke="#22d3ee" stroke-width="6" />
+  <rect x="372" y="182" width="26" height="64" rx="10" fill="#0f172a" stroke="#22d3ee" stroke-width="6" />
+  <line x1="127" y1="182" x2="127" y2="136" stroke="#ec4899" stroke-width="6" stroke-linecap="round" />
+  <circle cx="127" cy="130" r="9" fill="#f472b6" filter="url(#glow)" />
+
+  <!-- Astronaut Helmet Dome -->
+  <rect x="136" y="106" width="240" height="212" rx="96" fill="#f8fafc" stroke="url(#cyanNeon)" stroke-width="10" />
+  <path d="M 164 134 C 200 112 312 112 348 134" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" />
+
+  <!-- Cyberpunk Glowing Visor -->
+  <rect x="160" y="152" width="192" height="124" rx="52" fill="url(#visorGrad)" stroke="#22d3ee" stroke-width="6" />
+
+  <!-- Visor HUD Glint & Neon Eye Line -->
+  <path d="M 184 184 Q 256 164 320 184" fill="none" stroke="#e0f2fe" stroke-width="7" stroke-linecap="round" opacity="0.85" />
+  <path d="M 196 226 L 236 226 L 256 242 L 276 226 L 316 226" fill="none" stroke="#f472b6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Floating Energy Gem Icon Badge -->
+  <polygon points="412,136 432,162 412,188 392,162" fill="#22d3ee" stroke="#cffafe" stroke-width="3" />
+</svg>
